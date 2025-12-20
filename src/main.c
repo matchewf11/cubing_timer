@@ -3,49 +3,24 @@
 #include <time.h>
 
 #include "cli/cli.h"
-#include "scramble/scramble.h"
+#include "timer/timer.h"
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
-
   CliCmd cmd = parse_args((const char **)argv, argc);
-
   switch (cmd) {
   case CLI_INVALID:
-    printf("invalid\n");
-    break;
+    printf("Invlaid: help, stats, and run are the valid cmds.\n");
+    return -1;
   case CLI_HELP:
-    printf("help\n");
-    break;
+    printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
+           "stats\nrun: starts solve\n");
+    return 0;
   case CLI_STATS:
-    printf("stats\n");
-    break;
+    printf("TODO\n");
+    return 0;
   case CLI_RUN:
-    printf("run\n");
-    break;
+    start_cube_timer();
+    return 0;
   }
-
-  int len;
-  CubeMove *list = generate_scramble(&len);
-  if (list == NULL) {
-    return 1;
-  }
-
-  for (int i = 0; i < len; i++) {
-    printf("%s ", cube_move_str(list[i]));
-  }
-  printf("\n");
-
-  return 0;
 }
-
-/*
-   enable_raw_mode()
-   char c;
-   while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q') {
-   if (iscntrl(c)) {
-    printf("%d\n", c)
-   } else  {
-    printf("%d ('%c')\n", c, c);
-   }
- */
