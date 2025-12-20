@@ -1,6 +1,7 @@
 // Source For this Code
 // <https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html>
 
+#include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -28,3 +29,5 @@ int enable_raw_mode() {
 
   return 0;
 }
+
+void clear_term() { printf("\033[2J\033[H"); }

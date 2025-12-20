@@ -11,4 +11,6 @@ int disable_raw_mode();
 // 0 if ok
 int enable_raw_mode();
 
+void clear_term();
+
 #endif

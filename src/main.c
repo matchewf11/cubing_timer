@@ -20,7 +20,6 @@ int main(int argc, char *argv[]) {
     printf("TODO\n");
     return 0;
   case CLI_RUN:
-    start_cube_timer();
-    return 0;
+    return start_cube_timer() == 0 ? 0 : -1;
   }
 }
