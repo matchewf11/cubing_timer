@@ -23,6 +23,12 @@ int enable_raw_mode() {
   // ICANON: byte by btye instead of line by line
   raw.c_lflag &= ~(ECHO | ICANON);
 
+  // min bytes
+  raw.c_cc[VMIN] = 0;
+
+  // min time to wait
+  raw.c_cc[VTIME] = 0;
+
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
     return -1;
   }
