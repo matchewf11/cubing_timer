@@ -1,8 +1,8 @@
 main.o: src/main.c
 	gcc -c src/main.c
-all: main.o
-	gcc main.o
-run: all
-	./a.out
+cli.o: src/cli/cli.c
+	gcc -c src/cli/cli.c
+all: main.o cli.o
+	gcc main.o cli.o -o cubing_timer
 clean:
-	rm *.o a.out
+	rm *.o cubing_timer
