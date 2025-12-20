@@ -1,8 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "cli/cli.h"
 
 int main(int argc, char *argv[]) {
+  srand((unsigned)time(NULL));
 
   CliCmd cmd = parse_args((const char **)argv, argc);
 
