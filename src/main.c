@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "cli/cli.h"
+#include "scramble/scramble.h"
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -23,6 +24,17 @@ int main(int argc, char *argv[]) {
     printf("run\n");
     break;
   }
+
+  int len;
+  CubeMove *list = generate_scramble(&len);
+  if (list == NULL) {
+    return 1;
+  }
+
+  for (int i = 0; i < len; i++) {
+    printf("%s ", cube_move_str(list[i]));
+  }
+  printf("\n");
 
   return 0;
 }

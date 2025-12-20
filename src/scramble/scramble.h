@@ -27,4 +27,8 @@ typedef enum {
 // out is the len of the array
 CubeMove *generate_scramble(int *out);
 
+// Returns static string
+// representation of enum
+const char *cube_move_str(CubeMove move);
+
 #endif
