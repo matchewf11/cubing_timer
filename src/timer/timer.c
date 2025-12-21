@@ -6,7 +6,7 @@
 #include "../scramble/scramble.h"
 #include "../term/term.h"
 
-int start_cube_timer() {
+int start_cube_timer(double *out_time, CubeMove **out_moves, int *out_moves_len) {
   struct timespec start, end;
 
   int len;
@@ -33,6 +33,7 @@ int start_cube_timer() {
   while (1) {
     char c = '\0';
     if (read(STDIN_FILENO, &c, 1) == -1) {
+      disable_raw_mode();
       free(moves);
       return -1;
     }
@@ -42,12 +43,13 @@ int start_cube_timer() {
   }
 
   clock_gettime(CLOCK_MONOTONIC, &start);
+  double curr_time;
 
   // now print timer over and over again
   // until another space is pressed
   while (1) {
     clock_gettime(CLOCK_MONOTONIC, &end);
-    double curr_time =
+    curr_time =
         (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
 
     clear_term();
@@ -57,6 +59,7 @@ int start_cube_timer() {
     char c = '\0';
     if (read(STDIN_FILENO, &c, 1) == -1) {
       free(moves);
+      disable_raw_mode();
       return -1;
     }
     if (c == ' ') {
@@ -74,6 +77,9 @@ int start_cube_timer() {
   }
 
   clear_term();
-  free(moves);
+
+  *out_moves = moves;
+  *out_time = curr_time;
+  *out_moves_len = len;
   return 0;
 }
