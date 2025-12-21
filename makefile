@@ -13,4 +13,4 @@ db.o: src/db/db.c
 all: main.o cli.o scramble.o timer.o term.o db.o
 	gcc -O3 -lsqlite3 main.o cli.o scramble.o timer.o term.o db.o -o cubing_timer
 clean:
-	rm *.o cubing_timer
+	rm *.o cubing_timer *.db
