@@ -31,4 +31,8 @@ CubeMove *generate_scramble(int *out);
 // representation of enum
 const char *cube_move_str(CubeMove move);
 
+// malloc'd string that needs to be freed
+// check if outuput is null
+char *scramble_to_string(const CubeMove *moves, int len);
+
 #endif

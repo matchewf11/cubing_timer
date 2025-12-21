@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "scramble.h"
 
@@ -59,4 +60,32 @@ const char *cube_move_str(CubeMove move) {
   case MOVE_BACK_2:
     return "B2";
   }
+}
+
+char *scramble_to_string(const CubeMove *moves, int len) {
+  // make size for move is 2
+  // add 1 for null terminator
+  char *str = malloc(sizeof(char) * (len * 3 + 1));
+  if (str == NULL) {
+    return NULL;
+  }
+
+  int str_i = 0;
+  for (int i = 0; i < len; i++) {
+
+    if (i > 0) {
+      str[str_i++] = ' ';
+    }
+
+    const char *curr_move_str = cube_move_str(moves[i]);
+    const int curr_len = strlen(curr_move_str);
+
+
+    strncpy(&str[str_i], curr_move_str, curr_len);
+    str_i += curr_len;
+  }
+
+  str[str_i] = '\0';
+
+  return str;
 }

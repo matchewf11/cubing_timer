@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "cli/cli.h"
+#include "db/db.h"
 #include "scramble/scramble.h"
 #include "timer/timer.h"
 
@@ -22,6 +23,20 @@ int cli_run() {
   }
   printf("\n%f\n", time);
 
+  sqlite3 *db;
+  if (init_db(&db) != SQLITE_OK) {
+    free(moves);
+    return 1;
+  }
+
+  if (init_tables(db) != SQLITE_OK ||
+      insert_solve(db, time, moves, len) != SQLITE_OK) {
+    sqlite3_close(db);
+    free(moves);
+    return 1;
+  }
+
+  sqlite3_close(db);
   free(moves);
   return 0;
 }
