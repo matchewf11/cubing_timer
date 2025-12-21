@@ -10,7 +10,9 @@ term.o: src/term/term.c
 	gcc -c src/term/term.c
 db.o: src/db/db.c
 	gcc -c src/db/db.c
-all: main.o cli.o scramble.o timer.o term.o db.o
-	gcc -O3 -lsqlite3 main.o cli.o scramble.o timer.o term.o db.o -o cubing_timer
+cube_display.o: src/cube_display/cube_display.c
+	gcc -c src/cube_display/cube_display.c
+all: main.o cli.o scramble.o timer.o term.o db.o cube_display.o
+	gcc -O3 -lsqlite3 main.o cli.o scramble.o timer.o term.o db.o cube_display.o -o cubing_timer
 clean:
 	rm *.o cubing_timer *.db
