@@ -3,10 +3,12 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "../cube_display/cube_display.h"
 #include "../scramble/scramble.h"
 #include "../term/term.h"
 
-int start_cube_timer(double *out_time, CubeMove **out_moves, int *out_moves_len) {
+int start_cube_timer(double *out_time, CubeMove **out_moves,
+                     int *out_moves_len) {
   struct timespec start, end;
 
   int len;
@@ -23,6 +25,7 @@ int start_cube_timer(double *out_time, CubeMove **out_moves, int *out_moves_len)
   printf("\n");
 
   printf("Press <Space> to Start & Stop\n");
+  display_cube();
 
   if (enable_raw_mode() == -1) {
     free(moves);
