@@ -6,15 +6,7 @@
 #include "../scramble/scramble.h"
 #include "../term/term.h"
 
-static inline void print_moves(CubeMove *const moves, int len) {
-  for (int i = 0; i < len; i++) {
-    printf("%s ", cube_move_str(moves[i]));
-  }
-  printf("\n");
-}
-
 int start_cube_timer() {
-
   struct timespec start, end;
 
   int len;
@@ -25,7 +17,11 @@ int start_cube_timer() {
 
   clear_term();
 
-  print_moves(moves, len);
+  for (int i = 0; i < len; i++) {
+    printf("%s ", cube_move_str(moves[i]));
+  }
+  printf("\n");
+
   printf("Press <Space> to Start & Stop\n");
 
   if (enable_raw_mode() == -1) {
