@@ -18,4 +18,8 @@ int init_tables(sqlite3 *db);
 int insert_solve(sqlite3 *db, double time, const CubeMove *scramble,
                  int move_len);
 
+// Return SQLITE_OK if ok
+// else err
+int get_avg_all_time(sqlite3 *db, double *out_avg);
+
 #endif
