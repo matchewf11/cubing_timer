@@ -25,7 +25,7 @@ int start_cube_timer(double *out_time, CubeMove **out_moves,
   printf("\n");
 
   printf("Press <Space> to Start & Stop\n");
-  display_cube();
+  display_cube(moves, len);
 
   if (enable_raw_mode() == -1) {
     free(moves);
