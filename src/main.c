@@ -42,7 +42,7 @@ int cli_run() {
   for (int i = 0; i < len; i++) {
     printf("%s ", cube_move_str(moves[i]));
   }
-  printf("\n%f\n", time);
+  printf("\nTime: %.3f\n", time);
 
   sqlite3 *db;
   if (init_db(&db) != SQLITE_OK) {
