@@ -2,6 +2,13 @@
 
 #include "../scramble/scramble.h"
 
+const int up = 0;
+const int left = 1;
+const int front = 2;
+const int right = 3;
+const int back = 4;
+const int down = 5;
+
 typedef enum { WHITE, YELLOW, BLUE, GREEN, RED, ORANGE } CubeColor;
 
 typedef CubeColor Cube[6][9];
@@ -29,204 +36,106 @@ static void display_square(CubeColor color) {
   }
 }
 
-// static void f_move(Cube cube) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor temp_row[3] = {cube[U][6], cube[U][7], cube[U][8]};
-//   CubeColor temp = cube[F][0];
-//
-//   cube[F][0] = cube[F][6];
-//   cube[F][6] = cube[F][8];
-//   cube[F][8] = cube[F][2];
-//   cube[F][2] = temp;
-//
-//   temp = cube[F][1];
-//   cube[F][1] = cube[F][3];
-//   cube[F][3] = cube[F][7];
-//   cube[F][7] = cube[F][5];
-//   cube[F][5] = temp;
-//
-//   cube[U][6] = cube[L][8];
-//   cube[U][7] = cube[L][5];
-//   cube[U][8] = cube[L][2];
-//
-//   cube[L][8] = cube[D][2];
-//   cube[L][5] = cube[D][1];
-//   cube[L][2] = cube[D][0];
-//
-//   cube[D][2] = cube[R][0];
-//   cube[D][1] = cube[R][3];
-//   cube[D][0] = cube[R][6];
-//
-//   cube[R][0] = temp_row[0];
-//   cube[R][3] = temp_row[1];
-//   cube[R][6] = temp_row[2];
-// }
-//
-// static void b_move(CubeColor cube[6][9]) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor temp_row[3] = {cube[U][0], cube[U][1], cube[U][2]};
-//
-//   CubeColor temp = cube[B][0];
-//
-//   cube[B][0] = cube[B][6];
-//   cube[B][6] = cube[B][8];
-//   cube[B][8] = cube[B][2];
-//   cube[B][2] = temp;
-//
-//   temp = cube[B][1];
-//   cube[B][1] = cube[B][3];
-//   cube[B][3] = cube[B][7];
-//   cube[B][7] = cube[B][5];
-//   cube[B][5] = temp;
-//
-//   cube[U][0] = cube[R][2];
-//   cube[U][1] = cube[R][5];
-//   cube[U][2] = cube[R][8];
-//
-//   cube[R][2] = cube[D][8];
-//   cube[R][5] = cube[D][7];
-//   cube[R][8] = cube[D][6];
-//
-//   cube[D][8] = cube[L][0];
-//   cube[D][7] = cube[L][3];
-//   cube[D][6] = cube[L][6];
-//
-//   cube[L][0] = temp_row[2];
-//   cube[L][3] = temp_row[1];
-//   cube[L][6] = temp_row[0];
-// }
-//
-// static void l_move(CubeColor cube[6][9]) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor temp_col[3] = {cube[U][0], cube[U][3], cube[U][6]};
-//
-//   CubeColor temp = cube[L][0];
-//
-//   cube[L][0] = cube[L][6];
-//   cube[L][6] = cube[L][8];
-//   cube[L][8] = cube[L][2];
-//   cube[L][2] = temp;
-//
-//   temp = cube[L][1];
-//   cube[L][1] = cube[L][3];
-//   cube[L][3] = cube[L][7];
-//   cube[L][7] = cube[L][5];
-//   cube[L][5] = temp;
-//
-//   cube[U][0] = cube[B][8];
-//   cube[U][3] = cube[B][5];
-//   cube[U][6] = cube[B][2];
-//
-//   cube[B][8] = cube[D][6];
-//   cube[B][5] = cube[D][3];
-//   cube[B][2] = cube[D][0];
-//
-//   cube[D][6] = cube[F][6];
-//   cube[D][3] = cube[F][3];
-//   cube[D][0] = cube[F][0];
-//
-//   cube[F][0] = temp_col[0];
-//   cube[F][3] = temp_col[1];
-//   cube[F][6] = temp_col[2];
-// }
-//
-// static void r_move(CubeColor cube[6][9]) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor temp_col[3] = {cube[U][2], cube[U][5], cube[U][8]};
-//
-//   CubeColor temp = cube[R][0];
-//
-//   cube[R][0] = cube[R][6];
-//   cube[R][6] = cube[R][8];
-//   cube[R][8] = cube[R][2];
-//   cube[R][2] = temp;
-//
-//   temp = cube[R][1];
-//   cube[R][1] = cube[R][3];
-//   cube[R][3] = cube[R][7];
-//   cube[R][7] = cube[R][5];
-//   cube[R][5] = temp;
-//
-//   cube[U][2] = cube[F][2];
-//   cube[U][5] = cube[F][5];
-//   cube[U][8] = cube[F][8];
-//
-//   cube[F][2] = cube[D][2];
-//   cube[F][5] = cube[D][5];
-//   cube[F][8] = cube[D][8];
-//
-//   cube[D][2] = cube[B][6];
-//   cube[D][5] = cube[B][3];
-//   cube[D][8] = cube[B][0];
-//
-//   cube[B][6] = temp_col[0];
-//   cube[B][3] = temp_col[1];
-//   cube[B][0] = temp_col[2];
-// }
-//
-// static void u_move(CubeColor cube[6][9]) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor tmp[3] = {cube[B][0], cube[B][1], cube[B][2]};
-//
-//   CubeColor t = cube[U][0];
-//   cube[U][0] = cube[U][6];
-//   cube[U][6] = cube[U][8];
-//   cube[U][8] = cube[U][2];
-//   cube[U][2] = t;
-//   t = cube[U][1];
-//   cube[U][1] = cube[U][3];
-//   cube[U][3] = cube[U][7];
-//   cube[U][7] = cube[U][5];
-//   cube[U][5] = t;
-//
-//   cube[B][0] = cube[L][0];
-//   cube[B][1] = cube[L][1];
-//   cube[B][2] = cube[L][2];
-//   cube[L][0] = cube[F][0];
-//   cube[L][1] = cube[F][1];
-//   cube[L][2] = cube[F][2];
-//   cube[F][0] = cube[R][0];
-//   cube[F][1] = cube[R][1];
-//   cube[F][2] = cube[R][2];
-//   cube[R][0] = tmp[0];
-//   cube[R][1] = tmp[1];
-//   cube[R][2] = tmp[2];
-// }
-//
-// static void d_move(CubeColor cube[6][9]) {
-//   enum { U = 0, L = 1, F = 2, R = 3, B = 4, D = 5 };
-//
-//   CubeColor tmp[3] = {cube[F][6], cube[F][7], cube[F][8]};
-//
-//   CubeColor temp = cube[D][0];
-//   cube[D][0] = cube[D][6];
-//   cube[D][6] = cube[D][8];
-//   cube[D][8] = cube[D][2];
-//   cube[D][2] = temp;
-//   temp = cube[D][1];
-//   cube[D][1] = cube[D][3];
-//   cube[D][3] = cube[D][7];
-//   cube[D][7] = cube[D][5];
-//   cube[D][5] = temp;
-//
-//   cube[F][6] = cube[L][6];
-//   cube[F][7] = cube[L][7];
-//   cube[F][8] = cube[L][8];
-//   cube[L][6] = cube[B][8];
-//   cube[L][7] = cube[B][7];
-//   cube[L][8] = cube[B][6];
-//   cube[B][6] = cube[R][6];
-//   cube[B][7] = cube[R][7];
-//   cube[B][8] = cube[R][8];
-//   cube[R][6] = tmp[0];
-//   cube[R][7] = tmp[1];
-//   cube[R][8] = tmp[2];
-// }
+static void rotate_face_cw(CubeColor face[9]) {
+  CubeColor temp = face[0];
+  face[0] = face[6];
+  face[6] = face[8];
+  face[8] = face[2];
+  face[2] = temp;
+  temp = face[1];
+  face[1] = face[3];
+  face[3] = face[7];
+  face[7] = face[5];
+  face[5] = temp;
+}
+
+static void f_move(Cube cube) {
+
+  rotate_face_cw(cube[front]);
+
+  CubeColor temp[3] = {cube[up][6], cube[up][7], cube[up][8]};
+
+  cube[up][6] = cube[left][8];
+  cube[up][7] = cube[left][5];
+  cube[up][8] = cube[left][2];
+
+  cube[left][8] = cube[down][2];
+  cube[left][5] = cube[down][1];
+  cube[left][2] = cube[down][0];
+
+  cube[down][2] = cube[right][0];
+  cube[down][1] = cube[right][3];
+  cube[down][0] = cube[right][6];
+
+  cube[right][0] = temp[0];
+  cube[right][3] = temp[1];
+  cube[right][6] = temp[2];
+}
+
+static void b_move(Cube cube) {
+
+  rotate_face_cw(cube[back]);
+
+  for (int i = 0; i < 3; i++) {
+    CubeColor temp = cube[up][i];
+    cube[up][i] = cube[right][2 + (i * 3)];
+    cube[right][2 + (i * 3)] = cube[down][8 - i];
+    cube[down][8 - i] = cube[left][6 - (i * 3)];
+    cube[left][6 - (i * 3)] = temp;
+  }
+}
+
+static void r_move(Cube cube) {
+
+  rotate_face_cw(cube[right]);
+
+  for (int i = 0; i < 3; i++) {
+    CubeColor temp = cube[up][2 + i * 3];
+    cube[up][2 + i * 3] = cube[front][2 + i * 3];
+    cube[front][2 + i * 3] = cube[down][2 + i * 3];
+    cube[down][2 + i * 3] = cube[back][6 - i * 3];
+    cube[back][6 - i * 3] = temp;
+  }
+}
+
+static void l_move(Cube cube) {
+
+  rotate_face_cw(cube[left]);
+
+  for (int i = 0; i < 3; i++) {
+    CubeColor temp = cube[up][i * 3];
+    cube[up][i * 3] = cube[back][8 - i * 3];
+    cube[back][8 - i * 3] = cube[down][i * 3];
+    cube[down][i * 3] = cube[front][i * 3];
+    cube[front][i * 3] = temp;
+  }
+}
+
+static void u_move(Cube cube) {
+
+  rotate_face_cw(cube[up]);
+
+  for (int i = 0; i < 3; i++) {
+    CubeColor temp = cube[front][i];
+    cube[front][i] = cube[right][i];
+    cube[right][i] = cube[back][i];
+    cube[back][i] = cube[left][i];
+    cube[left][i] = temp;
+  }
+}
+
+static void d_move(Cube cube) {
+
+  rotate_face_cw(cube[down]);
+
+  for (int i = 6; i < 9; i++) {
+    CubeColor temp = cube[front][i];
+    cube[front][i] = cube[left][i];
+    cube[left][i] = cube[back][i];
+    cube[back][i] = cube[right][i];
+    cube[right][i] = temp;
+  }
+}
 
 void display_cube(const CubeMove *moves, int len) {
   Cube cube = {
