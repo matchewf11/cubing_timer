@@ -34,4 +34,7 @@ int get_personal_best(sqlite3 *db, double *out_pb, char **out_scramble);
 int get_curr_5(sqlite3 *db, double **times, char ***out_scramble_list,
                int *out_len);
 
+// SQLITE_OK if ok, else it is an error
+int delete_last_solve(sqlite3 *db);
+
 #endif

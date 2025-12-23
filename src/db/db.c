@@ -170,3 +170,21 @@ int get_curr_5(sqlite3 *db, double **times, char ***out_scramble_list,
   sqlite3_finalize(stmt);
   return SQLITE_OK;
 }
+
+int delete_last_solve(sqlite3 *db) {
+  const char *sql = "DELETE FROM solves WHERE id = (SELECT id FROM solves "
+                    "ORDER BY created_at DESC LIMIT 1)";
+  sqlite3_stmt *stmt;
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+    return -1;
+  }
+
+  if (sqlite3_step(stmt) != SQLITE_DONE) {
+    sqlite3_finalize(stmt);
+    return -1;
+  }
+
+  sqlite3_finalize(stmt);
+  return SQLITE_OK;
+}
