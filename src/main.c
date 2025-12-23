@@ -9,6 +9,7 @@
 
 int cli_run();
 int cli_stats();
+int cli_delete();
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -28,8 +29,7 @@ int main(int argc, char *argv[]) {
   case CLI_RUN:
     return cli_run();
   case CLI_DELETE:
-    printf("Deleting Last Solve...\n");
-    return 0;
+    return cli_delete();
   }
 }
 
@@ -116,5 +116,21 @@ int cli_stats() {
   free(times);
   free(scrambles);
   free(scramble_str);
+  return 0;
+}
+
+int cli_delete() {
+  sqlite3 *db;
+  if (init_db(&db) != SQLITE_OK) {
+    return 1;
+  }
+
+  if (delete_last_solve(db) != SQLITE_OK) {
+    sqlite3_close(db);
+    return 1;
+  }
+
+  printf("Deleted Last Solve\n");
+  sqlite3_close(db);
   return 0;
 }
