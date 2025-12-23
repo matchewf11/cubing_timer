@@ -1,5 +1,4 @@
 Add a typing mode (not timer)
-Show last avg of 5 (w/ sramble)
 
 sessions
 +2, and dnf

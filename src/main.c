@@ -85,11 +85,33 @@ int cli_stats() {
     return 1;
   }
 
+  double *times;
+  char **scrambles;
+  int scramble_len;
+  if (get_curr_5(db, &times, &scrambles, &scramble_len) != SQLITE_OK) {
+    sqlite3_close(db);
+    free(scramble_str);
+    return -1;
+  }
+
+  printf("Last %d Scrambles:\n", scramble_len);
+  for (int i = 0; i < scramble_len; i++) {
+    printf("Time: %.3f %s\n", times[i], scrambles[i]);
+  }
+  printf("\n");
+
   printf("All Time Avg: %.3f\n", avg);
   printf("All Time Count: %d\n", count);
   printf("Personal Best: %.3f: %s\n", pb, scramble_str);
 
   sqlite3_close(db);
+
+  for (int i = 0; i < scramble_len; i++) {
+    free(scrambles[i]);
+  }
+
+  free(times);
+  free(scrambles);
   free(scramble_str);
   return 0;
 }
