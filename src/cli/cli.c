@@ -17,6 +17,8 @@ CliCmd parse_args(const char *const *input, int len) {
     return CLI_DELETE;
   } else if (strcmp(input[1], "plus2") == 0) {
     return CLI_PLUS_TWO;
+  } else if (strcmp(input[1], "typing") == 0) {
+    return CLI_TYPING;
   }
 
   return CLI_INVALID;

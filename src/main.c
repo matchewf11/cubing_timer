@@ -1,8 +1,10 @@
+#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "cli/cli.h"
+#include "cube_display/cube_display.h"
 #include "db/db.h"
 #include "scramble/scramble.h"
 #include "timer/timer.h"
@@ -11,6 +13,7 @@ int cli_run();
 int cli_stats();
 int cli_delete();
 int cli_plus_two();
+int cli_typing();
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -18,14 +21,14 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf(
-        "Invlaid: help, stats, delete, plus2, and run are the valid cmds.\n");
+    printf("Invlaid: help, stats, typing, delete, plus2, and run are the valid "
+           "cmds.\n");
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
            "stats (personal best, all time count/avg, last 5 solves)\nrun: "
            "starts solve\ndelete: delete the last solve\nplus2: adds 2 to the "
-           "last solve\n");
+           "last solve\ntyping: allows for manually typing timer\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
@@ -35,6 +38,8 @@ int main(int argc, char *argv[]) {
     return cli_delete();
   case CLI_PLUS_TWO:
     return cli_plus_two();
+  case CLI_TYPING:
+    return cli_typing();
   }
 }
 
@@ -150,4 +155,44 @@ int cli_plus_two() {
   sqlite3_close(db);
   printf("Adding 2 to last time\n");
   return rs == SQLITE_OK ? 0 : 1;
+}
+
+int cli_typing() {
+  int len;
+  CubeMove *moves = generate_scramble(&len);
+  if (moves == NULL) {
+    return 1;
+  }
+
+  for (int i = 0; i < len; i++) {
+    printf("%s ", cube_move_str(moves[i]));
+  }
+  printf("\n");
+  display_cube(moves, len);
+
+  printf("Insert Time Below:\n");
+
+  double input;
+
+  if (scanf("%lf", &input) < 1) {
+    free(moves);
+    return 1;
+  }
+
+  sqlite3 *db;
+  if (init_db(&db) != SQLITE_OK) {
+    free(moves);
+    return 1;
+  }
+
+  if (init_tables(db) != SQLITE_OK ||
+      insert_solve(db, input, moves, len) != SQLITE_OK) {
+    sqlite3_close(db);
+    free(moves);
+    return 1;
+  }
+
+  sqlite3_close(db);
+  free(moves);
+  return 0;
 }
