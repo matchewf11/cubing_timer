@@ -20,7 +20,8 @@ int main(int argc, char *argv[]) {
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
-           "stats\nrun: starts solve\n");
+           "stats (personal best, all time count/avg, last 5 solves)\nrun: "
+           "starts solve\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
@@ -92,4 +93,3 @@ int cli_stats() {
   free(scramble_str);
   return 0;
 }
-
