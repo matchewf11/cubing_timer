@@ -28,7 +28,7 @@ int insert_solve(sqlite3 *db, double time, const CubeMove *scramble,
   const char *sql = "INSERT INTO solves (scramble, time) VALUES (?, ?)";
   sqlite3_stmt *stmt;
 
-  int rs = sqlite3_prepare(db, sql, -1, &stmt, NULL);
+  int rs = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
   if (rs != SQLITE_OK) {
     return -1;
   }
@@ -72,7 +72,7 @@ int get_avg_all_time(sqlite3 *db, double *out_avg, int *out_count) {
   const char *sql = "SELECT AVG(time), COUNT(*) FROM solves";
   sqlite3_stmt *stmt;
 
-  if (sqlite3_prepare(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
     return -1;
   }
 
@@ -92,7 +92,7 @@ int get_personal_best(sqlite3 *db, double *out_pb, char **out_scramble) {
   const char *sql = "SELECT time, scramble FROM solves ORDER BY time LIMIT 1";
   sqlite3_stmt *stmt;
 
-  if (sqlite3_prepare(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
     return -1;
   }
 
@@ -114,5 +114,58 @@ int get_personal_best(sqlite3 *db, double *out_pb, char **out_scramble) {
   *out_scramble = text;
   sqlite3_finalize(stmt);
 
+  return SQLITE_OK;
+}
+
+int get_curr_5(sqlite3 *db, double **times, char ***out_scramble_list,
+               int *out_len) {
+
+  const char *sql =
+      "SELECT time, scramble FROM solves ORDER BY created_at DESC LIMIT 5";
+  sqlite3_stmt *stmt;
+
+  *out_len = 0;
+  *times = NULL;
+  *out_scramble_list = NULL;
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+    return -1;
+  }
+
+  *times = malloc(sizeof(double) * 5);
+  if (*times == NULL) {
+    sqlite3_finalize(stmt);
+    return -1;
+  }
+
+  *out_scramble_list = malloc(sizeof(char *) * 5);
+  if (*out_scramble_list == NULL) {
+    sqlite3_finalize(stmt);
+    free(*times);
+    return -1;
+  }
+
+  while (sqlite3_step(stmt) == SQLITE_ROW && *out_len < 5) {
+    (*times)[*out_len] = sqlite3_column_double(stmt, 0);
+
+    const unsigned char *buffer = sqlite3_column_text(stmt, 1);
+    char *str = malloc(sizeof(char) * (1 + strlen((char *)buffer)));
+    if (str == NULL) {
+      sqlite3_finalize(stmt);
+      free(*times);
+      for (int i = 0; i < *out_len; i++) {
+        free((*out_scramble_list)[i]);
+      }
+
+      free(*out_scramble_list);
+
+      return -1;
+    }
+    strcpy(str, (char *)buffer);
+    (*out_scramble_list)[*out_len] = str;
+    (*out_len)++;
+  }
+
+  sqlite3_finalize(stmt);
   return SQLITE_OK;
 }
