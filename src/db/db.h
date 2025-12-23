@@ -20,6 +20,6 @@ int insert_solve(sqlite3 *db, double time, const CubeMove *scramble,
 
 // Return SQLITE_OK if ok
 // else err
-int get_avg_all_time(sqlite3 *db, double *out_avg);
+int get_avg_all_time(sqlite3 *db, double *out_avg, int *out_count);
 
 #endif

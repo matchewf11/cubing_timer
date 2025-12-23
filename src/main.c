@@ -70,12 +70,14 @@ int cli_stats() {
   }
 
   double avg;
-  if (get_avg_all_time(db, &avg) != SQLITE_OK) {
+  int count;
+  if (get_avg_all_time(db, &avg, &count) != SQLITE_OK) {
     sqlite3_close(db);
     return 1;
   }
 
   printf("All Time Avg: %.3f\n", avg);
+  printf("All Time Count: %d\n", count);
 
   sqlite3_close(db);
   return 0;

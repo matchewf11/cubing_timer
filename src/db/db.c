@@ -66,9 +66,9 @@ int insert_solve(sqlite3 *db, double time, const CubeMove *scramble,
   return 0;
 }
 
-int get_avg_all_time(sqlite3 *db, double *out_avg) {
+int get_avg_all_time(sqlite3 *db, double *out_avg, int *out_count) {
 
-  const char *sql = "SELECT AVG(time) FROM solves";
+  const char *sql = "SELECT AVG(time), COUNT(*) FROM solves";
   sqlite3_stmt *stmt;
 
   if (sqlite3_prepare(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
@@ -81,6 +81,8 @@ int get_avg_all_time(sqlite3 *db, double *out_avg) {
   }
 
   *out_avg = sqlite3_column_double(stmt, 0);
+  *out_count = sqlite3_column_int(stmt, 1);
+
   sqlite3_finalize(stmt);
   return SQLITE_OK;
 }
