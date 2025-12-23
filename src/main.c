@@ -141,11 +141,15 @@ int cli_delete() {
 }
 
 int cli_plus_two() {
+  sqlite3 *db;
+  if (init_db(&db) != SQLITE_OK) {
+    return 1;
+  }
 
-  // return SQLITE_OK if ok
-  // else error
-  // int add_two_last_scramble(sqlite3 *db);
+  int rs = add_two_last_scramble(db);
+  sqlite3_close(db);
 
-  printf("Plus two\n");
-  return 0;
+  printf("Adding 2 to last time\n");
+
+  return rs == SQLITE_OK ? 0 : 1;
 }
