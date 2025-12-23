@@ -16,17 +16,20 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf("Invlaid: help, stats, and run are the valid cmds.\n");
+    printf("Invlaid: help, stats, delete, and run are the valid cmds.\n");
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
            "stats (personal best, all time count/avg, last 5 solves)\nrun: "
-           "starts solve\n");
+           "starts solve\ndelete: delete the last solve\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
   case CLI_RUN:
     return cli_run();
+  case CLI_DELETE:
+    printf("Deleting Last Solve...\n");
+    return 0;
   }
 }
 

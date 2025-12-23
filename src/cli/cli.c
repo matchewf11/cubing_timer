@@ -13,6 +13,8 @@ CliCmd parse_args(const char *const *input, int len) {
     return CLI_STATS;
   } else if (strcmp(input[1], "help") == 0) {
     return CLI_HELP;
+  } else if (strcmp(input[1], "delete") == 0) {
+    return CLI_DELETE;
   }
 
   return CLI_INVALID;

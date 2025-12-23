@@ -15,6 +15,7 @@ int init_db(sqlite3 **db) {
 
 int init_tables(sqlite3 *db) {
   const char *sql = "CREATE TABLE IF NOT EXISTS solves ("
+                    "id INTEGER PRIMARY KEY,"
                     "scramble TEXT NOT NULL,"
                     "time REAL NOT NULL,"
                     "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
