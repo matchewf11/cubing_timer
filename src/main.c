@@ -76,9 +76,20 @@ int cli_stats() {
     return 1;
   }
 
+  double pb;
+  char *scramble_str;
+
+  if (get_personal_best(db, &pb, &scramble_str) != SQLITE_OK) {
+    sqlite3_close(db);
+    return 1;
+  }
+
   printf("All Time Avg: %.3f\n", avg);
   printf("All Time Count: %d\n", count);
+  printf("Personal Best: %.3f: %s\n", pb, scramble_str);
 
   sqlite3_close(db);
+  free(scramble_str);
   return 0;
 }
+
