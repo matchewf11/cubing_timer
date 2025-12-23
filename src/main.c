@@ -148,8 +148,6 @@ int cli_plus_two() {
 
   int rs = add_two_last_scramble(db);
   sqlite3_close(db);
-
   printf("Adding 2 to last time\n");
-
   return rs == SQLITE_OK ? 0 : 1;
 }

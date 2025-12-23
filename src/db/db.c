@@ -1,4 +1,5 @@
 #include <sqlite3.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -206,5 +207,5 @@ int add_two_last_scramble(sqlite3 *db) {
 
   int rs = sqlite3_step(stmt);
   sqlite3_finalize(stmt);
-  return rs;
+  return rs == SQLITE_DONE ? SQLITE_OK : -1;
 }
