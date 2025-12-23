@@ -10,6 +10,7 @@
 int cli_run();
 int cli_stats();
 int cli_delete();
+int cli_plus_two();
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -17,12 +18,14 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf("Invlaid: help, stats, delete, and run are the valid cmds.\n");
+    printf(
+        "Invlaid: help, stats, delete, plus2, and run are the valid cmds.\n");
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
            "stats (personal best, all time count/avg, last 5 solves)\nrun: "
-           "starts solve\ndelete: delete the last solve\n");
+           "starts solve\ndelete: delete the last solve\nplus2: adds 2 to the "
+           "last solve\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
@@ -30,6 +33,8 @@ int main(int argc, char *argv[]) {
     return cli_run();
   case CLI_DELETE:
     return cli_delete();
+  case CLI_PLUS_TWO:
+    return cli_plus_two();
   }
 }
 
@@ -132,5 +137,15 @@ int cli_delete() {
 
   printf("Deleted Last Solve\n");
   sqlite3_close(db);
+  return 0;
+}
+
+int cli_plus_two() {
+
+  // return SQLITE_OK if ok
+  // else error
+  // int add_two_last_scramble(sqlite3 *db);
+
+  printf("Plus two\n");
   return 0;
 }

@@ -7,6 +7,7 @@ typedef enum {
   CLI_HELP,
   CLI_INVALID,
   CLI_DELETE,
+  CLI_PLUS_TWO,
 } CliCmd;
 
 CliCmd parse_args(const char *const *input, int len);

@@ -188,3 +188,23 @@ int delete_last_solve(sqlite3 *db) {
   sqlite3_finalize(stmt);
   return SQLITE_OK;
 }
+
+int add_two_last_scramble(sqlite3 *db) {
+  const char *sql = "UPDATE solves "
+                    "SET time = time + 2.0 "
+                    "WHERE id = ("
+                    " SELECT id "
+                    " FROM solves "
+                    " ORDER BY created_at DESC "
+                    " LIMIT 1"
+                    ")";
+  sqlite3_stmt *stmt;
+
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+    return -1;
+  }
+
+  int rs = sqlite3_step(stmt);
+  sqlite3_finalize(stmt);
+  return rs;
+}

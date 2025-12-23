@@ -37,4 +37,8 @@ int get_curr_5(sqlite3 *db, double **times, char ***out_scramble_list,
 // SQLITE_OK if ok, else it is an error
 int delete_last_solve(sqlite3 *db);
 
+// return SQLITE_OK if ok
+// else error
+int add_two_last_scramble(sqlite3 *db);
+
 #endif
