@@ -1,5 +1,6 @@
 #include <sqlite3.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../scramble/scramble.h"
 
@@ -84,5 +85,34 @@ int get_avg_all_time(sqlite3 *db, double *out_avg, int *out_count) {
   *out_count = sqlite3_column_int(stmt, 1);
 
   sqlite3_finalize(stmt);
+  return SQLITE_OK;
+}
+
+int get_personal_best(sqlite3 *db, double *out_pb, char **out_scramble) {
+  const char *sql = "SELECT time, scramble FROM solves ORDER BY time LIMIT 1";
+  sqlite3_stmt *stmt;
+
+  if (sqlite3_prepare(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+    return -1;
+  }
+
+  if (sqlite3_step(stmt) != SQLITE_ROW) {
+    sqlite3_finalize(stmt);
+    return -1;
+  }
+
+  *out_pb = sqlite3_column_double(stmt, 0);
+
+  const char *temp_text = (const char *)sqlite3_column_text(stmt, 1);
+  char *text = malloc(sizeof(char) * (strlen(temp_text) + 1));
+  if (text == NULL) {
+    sqlite3_finalize(stmt);
+    return -1;
+  }
+
+  strcpy(text, temp_text);
+  *out_scramble = text;
+  sqlite3_finalize(stmt);
+
   return SQLITE_OK;
 }

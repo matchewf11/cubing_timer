@@ -22,4 +22,9 @@ int insert_solve(sqlite3 *db, double time, const CubeMove *scramble,
 // else err
 int get_avg_all_time(sqlite3 *db, double *out_avg, int *out_count);
 
+// -1 if err
+// SQLITE_OK if ok
+// free out_scramble if not an error
+int get_personal_best(sqlite3 *db, double *out_pb, char **out_scramble);
+
 #endif
