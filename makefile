@@ -1,3 +1,7 @@
+CFLAGS = -O3
+LIBS = -lsqlite3
+TARGET = cubing_timer
+
 main.o: src/main.c
 	gcc -c src/main.c
 cli.o: src/cli/cli.c
@@ -13,6 +17,6 @@ db.o: src/db/db.c
 cube_display.o: src/cube_display/cube_display.c
 	gcc -c src/cube_display/cube_display.c
 all: main.o cli.o scramble.o timer.o term.o db.o cube_display.o
-	gcc -O3 -lsqlite3 main.o cli.o scramble.o timer.o term.o db.o cube_display.o -o cubing_timer
+	gcc $(CFLAGS) main.o cli.o scramble.o timer.o term.o db.o cube_display.o $(LIBS) -o $(TARGET)
 clean:
 	rm *.o cubing_timer *.db

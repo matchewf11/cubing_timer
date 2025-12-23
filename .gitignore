@@ -1,3 +1,4 @@
 cubing_timer
 *.o
 *.db
+build/*
