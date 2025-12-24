@@ -1,6 +1,7 @@
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "cli/cli.h"
@@ -14,6 +15,7 @@ int cli_stats();
 int cli_delete();
 int cli_plus_two();
 int cli_typing();
+int cli_virtual();
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -21,14 +23,16 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf("Invlaid: help, stats, typing, delete, plus2, and run are the valid "
+    printf("Invlaid: help, stats, typing, virtual, delete, plus2, and run are "
+           "the valid "
            "cmds.\n");
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
            "stats (personal best, all time count/avg, last 5 solves)\nrun: "
            "starts solve\ndelete: delete the last solve\nplus2: adds 2 to the "
-           "last solve\ntyping: allows for manually typing timer\n");
+           "last solve\ntyping: allows for manually typing timer\nvirtual: "
+           "virtual cube solver\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
@@ -40,6 +44,8 @@ int main(int argc, char *argv[]) {
     return cli_plus_two();
   case CLI_TYPING:
     return cli_typing();
+  case CLI_VIRTUAL:
+    return cli_virtual();
   }
 }
 
@@ -109,7 +115,7 @@ int cli_stats() {
 
   printf("Last %d Scrambles:\n", scramble_len);
   for (int i = 0; i < scramble_len; i++) {
-    printf("Time: %.3f %s\n", times[i], scrambles[i]);
+    printf("Time: %.3f - %s\n", times[i], scrambles[i]);
   }
   printf("\n");
 
@@ -168,7 +174,11 @@ int cli_typing() {
     printf("%s ", cube_move_str(moves[i]));
   }
   printf("\n");
-  display_cube(moves, len);
+
+  Cube cube;
+  memcpy(cube, DEFAULT_CUBE, sizeof(DEFAULT_CUBE));
+  scramble_cube(cube, moves, len);
+  display_scrambled_cube(cube);
 
   printf("Insert Time Below:\n");
 
@@ -193,6 +203,19 @@ int cli_typing() {
   }
 
   sqlite3_close(db);
+  free(moves);
+  return 0;
+}
+
+int cli_virtual() {
+  int len;
+  CubeMove *moves = generate_scramble(&len);
+  if (moves == NULL) {
+    return 1;
+  }
+
+  // do something
+
   free(moves);
   return 0;
 }

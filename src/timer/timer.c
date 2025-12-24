@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -25,7 +26,11 @@ int start_cube_timer(double *out_time, CubeMove **out_moves,
   printf("\n");
 
   printf("Press <Space> to Start & Stop\n");
-  display_cube(moves, len);
+
+  Cube cube;
+  memcpy(cube, DEFAULT_CUBE, sizeof(DEFAULT_CUBE));
+  scramble_cube(cube, moves, len);
+  display_scrambled_cube(cube);
 
   if (enable_raw_mode() == -1) {
     free(moves);

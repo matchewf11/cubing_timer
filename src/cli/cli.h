@@ -9,6 +9,7 @@ typedef enum {
   CLI_DELETE,
   CLI_PLUS_TWO,
   CLI_TYPING,
+  CLI_VIRTUAL,
 } CliCmd;
 
 CliCmd parse_args(const char *const *input, int len);

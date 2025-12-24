@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "../scramble/scramble.h"
+#include "cube_display.h"
 
 const int up = 0;
 const int left = 1;
@@ -8,10 +10,6 @@ const int front = 2;
 const int right = 3;
 const int back = 4;
 const int down = 5;
-
-typedef enum { WHITE, YELLOW, BLUE, GREEN, RED, ORANGE } CubeColor;
-
-typedef CubeColor Cube[6][9];
 
 static void display_square(CubeColor color) {
   switch (color) {
@@ -137,16 +135,32 @@ static void d_move(Cube cube) {
   }
 }
 
-void display_cube(const CubeMove *moves, int len) {
-  Cube cube = {
-      {WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE},
-      {ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE},
-      {GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN},
-      {RED, RED, RED, RED, RED, RED, RED, RED, RED},
-      {BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE, BLUE},
-      {YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW},
-  };
+void display_scrambled_cube(Cube cube) {
+  for (int i = 0; i < 3; i++) {
+    printf("      ");
+    display_square(cube[0][0 + i * 3]);
+    display_square(cube[0][1 + i * 3]);
+    display_square(cube[0][2 + i * 3]);
+    printf("\n");
+  }
+  for (int i = 0; i < 3; i++) {
+    for (int j = 1; j < 5; j++) {
+      display_square(cube[j][0 + i * 3]);
+      display_square(cube[j][1 + i * 3]);
+      display_square(cube[j][2 + i * 3]);
+    }
+    printf("\n");
+  }
+  for (int i = 0; i < 3; i++) {
+    printf("      ");
+    display_square(cube[5][0 + i * 3]);
+    display_square(cube[5][1 + i * 3]);
+    display_square(cube[5][2 + i * 3]);
+    printf("\n");
+  }
+}
 
+void scramble_cube(Cube cube, const CubeMove *moves, int len) {
   for (int i = 0; i < len; i++) {
     switch (moves[i]) {
     case MOVE_FRONT:
@@ -227,30 +241,5 @@ void display_cube(const CubeMove *moves, int len) {
       r_move(cube);
       break;
     }
-  }
-
-  for (int i = 0; i < 3; i++) {
-    printf("      ");
-    display_square(cube[0][0 + i * 3]);
-    display_square(cube[0][1 + i * 3]);
-    display_square(cube[0][2 + i * 3]);
-    printf("\n");
-  }
-
-  for (int i = 0; i < 3; i++) {
-    for (int j = 1; j < 5; j++) {
-      display_square(cube[j][0 + i * 3]);
-      display_square(cube[j][1 + i * 3]);
-      display_square(cube[j][2 + i * 3]);
-    }
-    printf("\n");
-  }
-
-  for (int i = 0; i < 3; i++) {
-    printf("      ");
-    display_square(cube[5][0 + i * 3]);
-    display_square(cube[5][1 + i * 3]);
-    display_square(cube[5][2 + i * 3]);
-    printf("\n");
   }
 }
