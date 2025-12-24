@@ -21,6 +21,8 @@ CliCmd parse_args(const char *const *input, int len) {
     return CLI_TYPING;
   } else if (strcmp(input[1], "virtual") == 0) {
     return CLI_VIRTUAL;
+  } else if (strcmp(input[1], "genscram") == 0) {
+    return CLI_GEN_SCRAM;
   }
 
   return CLI_INVALID;

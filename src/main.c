@@ -19,6 +19,7 @@ int cli_delete();
 int cli_plus_two();
 int cli_typing();
 int cli_virtual();
+int cli_gen_scram();
 
 int main(int argc, char *argv[]) {
   srand((unsigned)time(NULL));
@@ -26,7 +27,8 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf("Invlaid: help, stats, typing, virtual, delete, plus2, and run are "
+    printf("Invlaid: help, genscram, stats, typing, virtual, delete, plus2, "
+           "and run are "
            "the valid "
            "cmds.\n");
     return -1;
@@ -35,7 +37,7 @@ int main(int argc, char *argv[]) {
            "stats (personal best, all time count/avg, last 5 solves)\nrun: "
            "starts solve\ndelete: delete the last solve\nplus2: adds 2 to the "
            "last solve\ntyping: allows for manually typing timer\nvirtual: "
-           "virtual cube solver\n");
+           "virtual cube solver\ngenscram: generates scramble\n");
     return 0;
   case CLI_STATS:
     return cli_stats();
@@ -49,6 +51,8 @@ int main(int argc, char *argv[]) {
     return cli_typing();
   case CLI_VIRTUAL:
     return cli_virtual();
+  case CLI_GEN_SCRAM:
+    return cli_gen_scram();
   }
 }
 
@@ -316,6 +320,22 @@ int cli_virtual() {
   }
 
   sqlite3_close(db);
+  free(moves);
+  return 0;
+}
+
+int cli_gen_scram() {
+  int len;
+  CubeMove *moves = generate_scramble(&len);
+  if (moves == NULL) {
+    return 1;
+  }
+
+  for (int i = 0; i < len; i++) {
+    printf("%s ", cube_move_str(moves[i]));
+  }
+  printf("\n");
+
   free(moves);
   return 0;
 }
