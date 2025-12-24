@@ -27,10 +27,7 @@ int main(int argc, char *argv[]) {
   CliCmd cmd = parse_args((const char **)argv, argc);
   switch (cmd) {
   case CLI_INVALID:
-    printf("Invlaid: help, genscram, stats, typing, virtual, delete, plus2, "
-           "and run are "
-           "the valid "
-           "cmds.\n");
+    printf("Invlaid Command: try running the help cmd\n");
     return -1;
   case CLI_HELP:
     printf("Commands: help, stats, run\nhelp: information\nstats: prints some "
