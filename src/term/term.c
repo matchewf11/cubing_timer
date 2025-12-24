@@ -19,12 +19,37 @@ int enable_raw_mode() {
 
   struct termios raw = orig_termios;
 
-  // ECHO: turn of char echoing
+  // ECHO: turn off char echoing
   // ICANON: byte by btye instead of line by line
   raw.c_lflag &= ~(ECHO | ICANON);
 
   // min bytes
   raw.c_cc[VMIN] = 0;
+
+  // min time to wait
+  raw.c_cc[VTIME] = 0;
+
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
+    return -1;
+  }
+
+  return 0;
+}
+
+int enable_raw_virtual() {
+
+  if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) {
+    return -1;
+  }
+
+  struct termios raw = orig_termios;
+
+  // ECHO: turn off char echoing
+  // ICANON: byte by btye instead of line by line
+  raw.c_lflag &= ~(ECHO | ICANON);
+
+  // min bytes
+  raw.c_cc[VMIN] = 1;
 
   // min time to wait
   raw.c_cc[VTIME] = 0;

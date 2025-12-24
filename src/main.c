@@ -1,13 +1,16 @@
+#include <bits/time.h>
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "cli/cli.h"
 #include "cube_display/cube_display.h"
 #include "db/db.h"
 #include "scramble/scramble.h"
+#include "term/term.h"
 #include "timer/timer.h"
 
 int cli_run();
@@ -214,8 +217,105 @@ int cli_virtual() {
     return 1;
   }
 
-  // do something
+  struct timespec start, end;
 
+  Cube cube;
+  memcpy(cube, DEFAULT_CUBE, sizeof(DEFAULT_CUBE));
+
+  scramble_cube(cube, moves, len);
+
+  if (enable_raw_virtual() != 0) {
+    free(moves);
+    return 1;
+  }
+
+  int have_moved = 0;
+  double curr_time = 0.0;
+
+  while (!cube_solved(cube)) {
+
+    clear_term();
+    display_scrambled_cube(cube);
+    printf("%.3f\n\n", curr_time);
+    printf("f: front\nb: back\nl: left\nr: right\nu: up\nd: down\n");
+
+    char c = '\0';
+    if (read(STDIN_FILENO, &c, 1) == -1) {
+      disable_raw_mode();
+      free(moves);
+      return 1;
+    }
+
+    int inner_have_moved = 0;
+    switch (c) {
+    case 'f':
+      f_move(cube);
+      inner_have_moved = 1;
+      break;
+    case 'b':
+      b_move(cube);
+      inner_have_moved = 1;
+      break;
+    case 'u':
+      u_move(cube);
+      inner_have_moved = 1;
+      break;
+    case 'd':
+      d_move(cube);
+      inner_have_moved = 1;
+      break;
+    case 'r':
+      r_move(cube);
+      inner_have_moved = 1;
+      break;
+    case 'l':
+      l_move(cube);
+      inner_have_moved = 1;
+      break;
+    default:
+      break;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    if (!have_moved) {
+      start = end;
+    }
+    curr_time =
+        (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+
+    if (inner_have_moved) {
+      have_moved = 1;
+    }
+  }
+
+  if (disable_raw_mode() != 0) {
+    free(moves);
+    return 1;
+  }
+
+  clear_term();
+
+  for (int i = 0; i < len; i++) {
+    printf("%s ", cube_move_str(moves[i]));
+  }
+  printf("\nTime: %.3f\n", curr_time);
+
+  // insert into the db
+  sqlite3 *db;
+  if (init_db(&db) != SQLITE_OK) {
+    free(moves);
+    return 1;
+  }
+
+  if (init_tables(db) != SQLITE_OK ||
+      insert_solve(db, curr_time, moves, len) != SQLITE_OK) {
+
+    sqlite3_close(db);
+    free(moves);
+    return 1;
+  }
+
+  sqlite3_close(db);
   free(moves);
   return 0;
 }

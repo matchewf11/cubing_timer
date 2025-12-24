@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "../scramble/scramble.h"
 #include "cube_display.h"
@@ -47,7 +46,7 @@ static void rotate_face_cw(CubeColor face[9]) {
   face[5] = temp;
 }
 
-static void f_move(Cube cube) {
+void f_move(Cube cube) {
 
   rotate_face_cw(cube[front]);
 
@@ -70,7 +69,7 @@ static void f_move(Cube cube) {
   cube[right][6] = temp[2];
 }
 
-static void b_move(Cube cube) {
+void b_move(Cube cube) {
 
   rotate_face_cw(cube[back]);
 
@@ -83,7 +82,7 @@ static void b_move(Cube cube) {
   }
 }
 
-static void r_move(Cube cube) {
+void r_move(Cube cube) {
 
   rotate_face_cw(cube[right]);
 
@@ -96,7 +95,7 @@ static void r_move(Cube cube) {
   }
 }
 
-static void l_move(Cube cube) {
+void l_move(Cube cube) {
 
   rotate_face_cw(cube[left]);
 
@@ -109,7 +108,7 @@ static void l_move(Cube cube) {
   }
 }
 
-static void u_move(Cube cube) {
+void u_move(Cube cube) {
 
   rotate_face_cw(cube[up]);
 
@@ -122,7 +121,7 @@ static void u_move(Cube cube) {
   }
 }
 
-static void d_move(Cube cube) {
+void d_move(Cube cube) {
 
   rotate_face_cw(cube[down]);
 
@@ -242,4 +241,15 @@ void scramble_cube(Cube cube, const CubeMove *moves, int len) {
       break;
     }
   }
+}
+
+int cube_solved(Cube cube) {
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (cube[i][j] != DEFAULT_CUBE[i][j]) {
+        return 0;
+      }
+    }
+  }
+  return 1;
 }
